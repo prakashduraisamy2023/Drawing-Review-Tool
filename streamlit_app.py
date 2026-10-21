@@ -6,10 +6,8 @@ from __future__ import annotations
 import csv
 import hashlib
 import io
-import json
 import tempfile
 import time
-from html import escape
 from pathlib import Path
 from typing import Any
 
@@ -20,6 +18,7 @@ from backend.app.extraction import DrawingParser
 from backend.app.relationships import RelationshipEngine
 from backend.app.validation import ValidationEngine
 from backend.app.vision import VisionEngine
+from streamlit_workspace import render_analysis_workspace
 
 MAX_UPLOAD_BYTES = 50 * 1024 * 1024
 
@@ -154,6 +153,10 @@ def _inject_original_theme() -> None:
         div[data-testid="stTabs"] button[role="tab"] { font-weight: 720; }
         div[data-testid="stMetric"] { background: #f5f7f4; border: 1px solid var(--line); padding: 12px; }
         .stButton button, .stDownloadButton button { border-radius: 0; }
+        .st-key-preview_panel, .st-key-results_panel {
+            height: calc(100vh - 360px); min-height: 650px; overflow: auto;
+            background: #ffffff; border: 1px solid var(--line-strong); padding: 12px;
+        }
         @media (max-width: 1000px) {
             .original-topbar { align-items: flex-start; flex-direction: column; padding-top: 18px; padding-bottom: 18px; }
             .original-topbar__status { text-align: left; font-size: 10px; }
@@ -186,6 +189,9 @@ def _inject_original_theme() -> None:
             .original-workflow { padding: 0 18px; grid-template-columns: 1fr; }
             .original-workflow > div + div { padding-left: 0; border-left: 0; border-top: 0; }
             .original-footer { align-items: flex-start; flex-direction: column; justify-content: center; padding-top: 18px; padding-bottom: 18px; }
+            .st-key-preview_panel, .st-key-results_panel {
+                height: auto; min-height: 0; overflow: visible; padding: 8px;
+            }
         }
         </style>
         """,
@@ -221,66 +227,6 @@ def _footer() -> None:
         """,
         unsafe_allow_html=True,
     )
-
-
-def _field_value(document: dict[str, Any], field: str) -> Any:
-    candidate = document.get(field)
-    if isinstance(candidate, dict) and "value" in candidate:
-        return candidate.get("value")
-    return candidate
-
-
-def _flatten_evidence(value: Any, path: str = "drawing") -> list[dict[str, Any]]:
-    if isinstance(value, dict) and {"value", "confidence", "extraction_method"}.issubset(value):
-        if value.get("value") is None:
-            return []
-        return [
-            {
-                "field": path,
-                "value": str(value.get("value")),
-                "page": value.get("page_number"),
-                "confidence": value.get("confidence"),
-                "method": value.get("extraction_method"),
-            }
-        ]
-    if isinstance(value, dict):
-        rows: list[dict[str, Any]] = []
-        for key, child in value.items():
-            rows.extend(_flatten_evidence(child, f"{path}.{key}"))
-        return rows
-    if isinstance(value, list):
-        rows = []
-        for index, child in enumerate(value):
-            rows.extend(_flatten_evidence(child, f"{path}[{index}]"))
-        return rows
-    return []
-
-
-def _table_rows(items: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    rows: list[dict[str, Any]] = []
-    for item in items:
-        row: dict[str, Any] = {}
-        for key, value in item.items():
-            if isinstance(value, dict) and "value" in value:
-                row[key] = value.get("value")
-            elif not isinstance(value, (dict, list)):
-                row[key] = value
-        rows.append(row)
-    return rows
-
-
-@st.cache_data(show_spinner=False)
-def _pdf_page_count(pdf_bytes: bytes) -> int:
-    with fitz.open(stream=pdf_bytes, filetype="pdf") as document:
-        return document.page_count
-
-
-@st.cache_data(show_spinner=False)
-def _render_pdf_page(pdf_bytes: bytes, page_index: int) -> bytes:
-    with fitz.open(stream=pdf_bytes, filetype="pdf") as document:
-        page = document.load_page(page_index)
-        matrix = fitz.Matrix(1.5, 1.5)
-        return page.get_pixmap(matrix=matrix, alpha=False).tobytes("png")
 
 
 def _validate_pdf(filename: str, payload: bytes) -> None:
@@ -397,12 +343,6 @@ def _report_csv(analysis: dict[str, Any]) -> bytes:
     return output.getvalue().encode("utf-8")
 
 
-def _status_metrics(summary: dict[str, Any], labels: list[tuple[str, str]]) -> None:
-    columns = st.columns(len(labels))
-    for column, (key, label) in zip(columns, labels, strict=True):
-        column.metric(label, summary.get(key, 0))
-
-
 _inject_original_theme()
 _topbar()
 
@@ -496,185 +436,15 @@ if analysis is None:
 
 pdf_bytes = st.session_state["pdf_bytes"]
 uploaded_filename = st.session_state["uploaded_filename"]
-page_count = _pdf_page_count(pdf_bytes)
+if st.session_state.pop("request_analysis_rerun", False):
+    st.session_state["analysis"] = _run_complete_analysis(uploaded_filename, pdf_bytes)
+    analysis = st.session_state["analysis"]
 
-with st.container(key="analysis_header"):
-    st.markdown(
-        f"""
-        <div class="analysis-shell">
-          <div class="analysis-title-row">
-            <div>
-              <small>Automated review workspace · Drawing {analysis["drawing_id"]}</small>
-              <h1>{escape(uploaded_filename)}</h1>
-              <p>Evidence remains linked to page, confidence, and extraction method.</p>
-            </div>
-          </div>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
-    if st.button("← Analyze another drawing", key="new_drawing"):
-        for key in ("analysis", "file_digest", "pdf_bytes", "uploaded_filename"):
-            st.session_state.pop(key, None)
-        st.rerun()
-
-drawing = analysis["level1"]
-validation = analysis["level2"]
-vision = analysis["level3"]
-relationships = analysis["level4"]
-
-st.divider()
-st.subheader("Automated review summary")
-summary_columns = st.columns(4)
-summary_columns[0].metric("Level 1", "COMPLETE")
-summary_columns[1].metric("Level 2", validation["summary"]["overall_status"])
-summary_columns[2].metric("Level 3 objects", vision["summary"]["objects_detected"])
-summary_columns[3].metric("Level 4", relationships["summary"]["overall_status"])
-
-drawing_tab, validation_tab, visual_tab, relationship_tab, report_tab = st.tabs(
-    ["Drawing", "Validation", "Visual", "Relationships", "Report"]
+render_analysis_workspace(
+    analysis,
+    pdf_bytes,
+    uploaded_filename,
+    _report_csv(analysis),
 )
-
-with drawing_tab:
-    identity = {
-        "Drawing number": _field_value(drawing, "drawing_number"),
-        "Revision": _field_value(drawing, "revision"),
-        "Part name": _field_value(drawing, "part_name"),
-        "Document type": _field_value(drawing, "document_type"),
-        "Units": _field_value(drawing, "units"),
-        "Scale": _field_value(drawing, "scale"),
-        "Pages": _field_value(drawing, "page_count"),
-    }
-    st.dataframe([identity], width="stretch", hide_index=True)
-    for key, title in (
-        ("revision_records", "Revision records"),
-        ("notes", "Notes"),
-        ("bom_items", "BOM items"),
-        ("part_list_items", "Part-list items"),
-        ("service_parts", "Service parts"),
-        ("standard_references", "Standards"),
-    ):
-        items = drawing.get(key, [])
-        if items:
-            st.markdown(f"### {title}")
-            st.dataframe(_table_rows(items), width="stretch", hide_index=True)
-    with st.expander("Extraction evidence and provenance"):
-        st.dataframe(
-            _flatten_evidence(drawing),
-            width="stretch",
-            hide_index=True,
-        )
-
-with validation_tab:
-    _status_metrics(
-        validation["summary"],
-        [
-            ("passed", "Passed"),
-            ("failed", "Failed"),
-            ("warnings", "Warnings"),
-            ("manual_review", "Manual review"),
-            ("not_evaluated", "Not evaluated"),
-        ],
-    )
-    validation_rows = [
-        {
-            "Rule": item.get("rule_id"),
-            "Requirement": item.get("rule_name"),
-            "Status": item.get("status"),
-            "Severity": item.get("severity"),
-            "Actual": item.get("actual_condition"),
-            "Recommendation": item.get("recommendation"),
-        }
-        for item in validation.get("results", [])
-    ]
-    st.dataframe(validation_rows, width="stretch", hide_index=True)
-
-with visual_tab:
-    _status_metrics(
-        vision["summary"],
-        [
-            ("pages_processed", "Pages"),
-            ("objects_detected", "Objects"),
-            ("low_confidence_count", "Low confidence"),
-        ],
-    )
-    visual_rows = [
-        {
-            "Type": item.get("object_type"),
-            "Page": item.get("page_number"),
-            "Text": item.get("normalized_text") or item.get("raw_text"),
-            "Confidence": item.get("confidence"),
-            "Detector": item.get("detector"),
-        }
-        for item in vision.get("objects", [])
-    ]
-    if visual_rows:
-        st.dataframe(visual_rows, width="stretch", hide_index=True)
-    else:
-        st.info("No visual objects were detected with the configured detectors.")
-
-with relationship_tab:
-    _status_metrics(
-        relationships["summary"],
-        [
-            ("relationships_checked", "Checked"),
-            ("passed", "Passed"),
-            ("warnings", "Warnings"),
-            ("manual_review", "Manual review"),
-            ("not_evaluated", "Not evaluated"),
-        ],
-    )
-    relationship_rows = [
-        {
-            "Priority": item.get("priority"),
-            "Rule": item.get("relationship_rule_id"),
-            "Finding": item.get("name"),
-            "Status": item.get("status"),
-            "Confidence": item.get("confidence"),
-            "Actual": item.get("actual_relationship"),
-            "Recommendation": item.get("recommendation"),
-        }
-        for item in relationships.get("findings", [])
-    ]
-    st.dataframe(relationship_rows, width="stretch", hide_index=True)
-    graph = relationships.get("graph", {})
-    st.caption(
-        f"Relationship graph: {len(graph.get('nodes', []))} nodes · "
-        f"{len(graph.get('edges', []))} edges"
-    )
-    with st.expander("Correlations"):
-        st.json(relationships.get("correlations", []), expanded=False)
-
-with report_tab:
-    st.warning(analysis["disclaimer"])
-    st.markdown("### Processing time")
-    timing_columns = st.columns(4)
-    for column, level in zip(timing_columns, ("level1", "level2", "level3", "level4"), strict=True):
-        column.metric(level.replace("level", "Level "), f"{analysis['timing_ms'][level]:,.1f} ms")
-    findings = [
-        item
-        for item in relationships.get("findings", [])
-        if item.get("status") not in {"PASS", "NOT_APPLICABLE"}
-    ]
-    if findings:
-        st.markdown("### Top findings")
-        for item in findings[:10]:
-            st.markdown(
-                f"**{item.get('priority')} · {item.get('name')} — {item.get('status')}**  \n"
-                f"{item.get('explanation')}"
-            )
-    export_columns = st.columns(2)
-    export_columns[0].download_button(
-        "Download complete JSON",
-        data=json.dumps(analysis, indent=2, default=str).encode("utf-8"),
-        file_name=f"{Path(uploaded_filename).stem}-complete-analysis.json",
-        mime="application/json",
-        width="stretch",
-    )
-    export_columns[1].download_button(
-        "Download review CSV",
-        data=_report_csv(analysis),
-        file_name=f"{Path(uploaded_filename).stem}-review.csv",
-        mime="text/csv",
-        width="stretch",
-    )
+_footer()
+st.stop()
