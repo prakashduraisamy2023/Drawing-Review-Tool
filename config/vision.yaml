@@ -1,0 +1,18 @@
+{
+  "level3_version": "1.1.0",
+  "partial_confidence_floor": 0.75,
+  "confidence_thresholds": {
+    "REVISION_TRIANGLE": 0.90,
+    "BOM_BALLOON": 0.90,
+    "SCC_SYMBOL": 0.92,
+    "CRITICAL_SYMBOL": 0.92,
+    "DATUM_SYMBOL": 0.90,
+    "GDT_FRAME": 0.90,
+    "VIEW_ARROW": 0.88,
+    "SECTION_ARROW": 0.88,
+    "DETAIL_CALLOUT": 0.88,
+    "FLAG_NOTE": 0.90,
+    "SUPPLIER_RASTER_TEXT": 0.90,
+    "UNKNOWN": 0.95
+  }
+}

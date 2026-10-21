@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "source_filename": "47789660_A_watermarked.pdf",
+  "categories": {
+    "Title Block": {
+      "fields": {
+        "page_count.value": 1,
+        "drawing_number.value": "47789660",
+        "revision.value": "A",
+        "document_type.value": "SUPPLIER_DRAWING",
+        "units.value": "mm",
+        "weight.value": "6.550",
+        "sheet_number.value": 1,
+        "total_sheets.value": 1,
+        "pages[0].title_block.sheet_number.value": 1,
+        "pages[0].title_block.sheet_count.value": 1
+      },
+      "records": []
+    },
+    "Revision": { "fields": {}, "records": [] },
+    "Notes": { "fields": {}, "records": [] },
+    "BOM": { "fields": {}, "records": [] },
+    "Part Lists": { "fields": {}, "records": [] },
+    "Service Parts": { "fields": {}, "records": [] },
+    "Supplier Information": {
+      "fields": {
+        "supplier_info.supplier_name.value": "SUPREME",
+        "supplier_info.supplier_part_number.value": "ASBK9660001"
+      },
+      "records": []
+    },
+    "Standards": { "fields": {}, "records": [] }
+  },
+  "expected_null": []
+}

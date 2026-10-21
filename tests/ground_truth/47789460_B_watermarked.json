@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "source_filename": "47789460_B_watermarked.pdf",
+  "categories": {
+    "Title Block": {
+      "fields": {
+        "page_count.value": 1,
+        "drawing_number.value": "47789460",
+        "revision.value": "B",
+        "document_type.value": "SUPPLIER_DRAWING",
+        "units.value": "mm",
+        "sheet_number.value": 1,
+        "total_sheets.value": 1,
+        "pages[0].title_block.sheet_number.value": 1,
+        "pages[0].title_block.sheet_count.value": 1
+      },
+      "records": []
+    },
+    "Revision": { "fields": {}, "records": [] },
+    "Notes": { "fields": {}, "records": [] },
+    "BOM": { "fields": {}, "records": [] },
+    "Part Lists": { "fields": {}, "records": [] },
+    "Service Parts": { "fields": {}, "records": [] },
+    "Supplier Information": {
+      "fields": {
+        "supplier_info.manufacturer_name.value": "UNO MINDA LIMITED"
+      },
+      "records": []
+    },
+    "Standards": { "fields": {}, "records": [] }
+  },
+  "expected_null": []
+}

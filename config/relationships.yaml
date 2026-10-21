@@ -1,0 +1,17 @@
+{
+  "level4_version": "1.0.0",
+  "automatic_confidence": 0.90,
+  "partial_confidence_floor": 0.75,
+  "bom_missing_status": "WARNING",
+  "orphan_balloon_status": "WARNING",
+  "part_number_mappings": [],
+  "scc_semantics": {},
+  "relationship_categories": {
+    "REVISION CONTROL ISSUE": ["REL-REV-001", "REL-REV-002"],
+    "BOM TRACEABILITY ISSUE": ["REL-BOM-001", "REL-BOM-002", "REL-BOM-003"],
+    "NOTE TRACEABILITY ISSUE": ["REL-NOTE-001"],
+    "DATUM / GD&T TRACEABILITY ISSUE": ["REL-GDT-001", "REL-GDT-002"],
+    "SUPPLIER TRACEABILITY ISSUE": ["REL-SUP-001", "REL-PART-001"],
+    "DOCUMENT CONTROL ISSUE": ["REL-DOC-001"]
+  }
+}

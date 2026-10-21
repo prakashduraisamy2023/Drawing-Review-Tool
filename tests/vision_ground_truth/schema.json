@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Level-3 manually reviewed visual ground truth",
+  "type": "object",
+  "required": ["source_filename", "review_status", "objects"],
+  "properties": {
+    "source_filename": {"type": "string"},
+    "review_status": {"const": "MANUALLY_REVIEWED"},
+    "reviewer": {"type": ["string", "null"]},
+    "objects": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["page_number", "object_type", "bounding_box", "reviewer_comment"],
+        "properties": {
+          "page_number": {"type": "integer", "minimum": 1},
+          "object_type": {"type": "string"},
+          "bounding_box": {
+            "type": "array",
+            "prefixItems": [
+              {"type": "number"}, {"type": "number"},
+              {"type": "number"}, {"type": "number"}
+            ],
+            "minItems": 4,
+            "maxItems": 4
+          },
+          "text": {"type": ["string", "null"]},
+          "reviewer_comment": {"type": "string"}
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

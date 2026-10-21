@@ -1,0 +1,762 @@
+{
+  "source_document": "User-supplied Level-2 Automated Drawing Checklist Validation specification",
+  "version": "1.0.0",
+  "items": [
+    {
+      "source_section": "Level-2 specification / Title Block",
+      "source_item": "TB-001",
+      "source_text": "Drawing number present",
+      "rule_id": "TB-001",
+      "automation_status": "AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / Title Block",
+      "source_item": "TB-002",
+      "source_text": "Drawing number consistent across sheets",
+      "rule_id": "TB-002",
+      "automation_status": "AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / Title Block",
+      "source_item": "TB-003",
+      "source_text": "Revision present",
+      "rule_id": "TB-003",
+      "automation_status": "AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / Title Block",
+      "source_item": "TB-004",
+      "source_text": "Revision consistent across sheets",
+      "rule_id": "TB-004",
+      "automation_status": "AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / Title Block",
+      "source_item": "TB-005",
+      "source_text": "Part name consistent where required",
+      "rule_id": "TB-005",
+      "automation_status": "PARTIALLY_AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / Title Block",
+      "source_item": "TB-006",
+      "source_text": "Units present",
+      "rule_id": "TB-006",
+      "automation_status": "AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / Title Block",
+      "source_item": "TB-007",
+      "source_text": "Units consistent across sheets",
+      "rule_id": "TB-007",
+      "automation_status": "AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / Title Block",
+      "source_item": "TB-008",
+      "source_text": "Sheet number valid",
+      "rule_id": "TB-008",
+      "automation_status": "AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / Title Block",
+      "source_item": "TB-009",
+      "source_text": "Sheet sequence",
+      "rule_id": "TB-009",
+      "automation_status": "AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / Title Block",
+      "source_item": "TB-010",
+      "source_text": "Total sheet count matches PDF page count",
+      "rule_id": "TB-010",
+      "automation_status": "AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / Title Block",
+      "source_item": "TB-011",
+      "source_text": "Weight present for applicable supplier part",
+      "rule_id": "TB-011",
+      "automation_status": "AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / Title Block",
+      "source_item": "TB-012",
+      "source_text": "Scale present",
+      "rule_id": "TB-012",
+      "automation_status": "AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / Title Block",
+      "source_item": "TB-013",
+      "source_text": "Drawing size present",
+      "rule_id": "TB-013",
+      "automation_status": "AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / Title Block",
+      "source_item": "TB-014",
+      "source_text": "Part number format",
+      "rule_id": "TB-014",
+      "automation_status": "PARTIALLY_AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / Revision",
+      "source_item": "REV-001",
+      "source_text": "ECN present on revision record",
+      "rule_id": "REV-001",
+      "automation_status": "AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / Revision",
+      "source_item": "REV-002",
+      "source_text": "Revision date present",
+      "rule_id": "REV-002",
+      "automation_status": "AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / Revision",
+      "source_item": "REV-003",
+      "source_text": "Changed by present",
+      "rule_id": "REV-003",
+      "automation_status": "AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / Revision",
+      "source_item": "REV-004",
+      "source_text": "Approved by present",
+      "rule_id": "REV-004",
+      "automation_status": "AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / Revision",
+      "source_item": "REV-005",
+      "source_text": "Revision description present",
+      "rule_id": "REV-005",
+      "automation_status": "AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / Revision",
+      "source_item": "REV-006",
+      "source_text": "Initial release text recognized",
+      "rule_id": "REV-006",
+      "automation_status": "AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / Revision",
+      "source_item": "REV-007",
+      "source_text": "Production release text recognized",
+      "rule_id": "REV-007",
+      "automation_status": "AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / Revision",
+      "source_item": "REV-008",
+      "source_text": "Not released text recognized",
+      "rule_id": "REV-008",
+      "automation_status": "AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / Revision",
+      "source_item": "REV-009",
+      "source_text": "See sheet 1 for revisions resolves",
+      "rule_id": "REV-009",
+      "automation_status": "AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / Revision",
+      "source_item": "REV-010",
+      "source_text": "Revision sequence",
+      "rule_id": "REV-010",
+      "automation_status": "PARTIALLY_AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / Revision",
+      "source_item": "REV-011",
+      "source_text": "Revision table versus title revision",
+      "rule_id": "REV-011",
+      "automation_status": "PARTIALLY_AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / Revision",
+      "source_item": "REV-012",
+      "source_text": "Revision triangle check",
+      "rule_id": "REV-012",
+      "automation_status": "NOT_IMPLEMENTED"
+    },
+    {
+      "source_section": "Level-2 specification / Notes",
+      "source_item": "NOTE-001",
+      "source_text": "Notes section detected",
+      "rule_id": "NOTE-001",
+      "automation_status": "AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / Notes",
+      "source_item": "NOTE-002",
+      "source_text": "Note number sequence",
+      "rule_id": "NOTE-002",
+      "automation_status": "AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / Notes",
+      "source_item": "NOTE-003",
+      "source_text": "Duplicate note number",
+      "rule_id": "NOTE-003",
+      "automation_status": "AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / Notes",
+      "source_item": "NOTE-004",
+      "source_text": "Empty note",
+      "rule_id": "NOTE-004",
+      "automation_status": "AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / Notes",
+      "source_item": "NOTE-005",
+      "source_text": "Configured technical spelling",
+      "rule_id": "NOTE-005",
+      "automation_status": "PARTIALLY_AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / Notes",
+      "source_item": "NOTE-006",
+      "source_text": "Standard note presence",
+      "rule_id": "NOTE-006",
+      "automation_status": "AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / Notes",
+      "source_item": "NOTE-007",
+      "source_text": "PES references detected",
+      "rule_id": "NOTE-007",
+      "automation_status": "AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / Notes",
+      "source_item": "NOTE-008",
+      "source_text": "Obsolete specification",
+      "rule_id": "NOTE-008",
+      "automation_status": "PARTIALLY_AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / Notes",
+      "source_item": "NOTE-009",
+      "source_text": "Note deleted format",
+      "rule_id": "NOTE-009",
+      "automation_status": "PARTIALLY_AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / Notes",
+      "source_item": "NOTE-010",
+      "source_text": "Part number in note",
+      "rule_id": "NOTE-010",
+      "automation_status": "PARTIALLY_AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / Notes",
+      "source_item": "NOTE-011",
+      "source_text": "Torque unit format",
+      "rule_id": "NOTE-011",
+      "automation_status": "PARTIALLY_AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / Notes",
+      "source_item": "NOTE-012",
+      "source_text": "Note callout relationship",
+      "rule_id": "NOTE-012",
+      "automation_status": "NOT_IMPLEMENTED"
+    },
+    {
+      "source_section": "Level-2 specification / Standards",
+      "source_item": "STD-001",
+      "source_text": "ASME reference detected",
+      "rule_id": "STD-001",
+      "automation_status": "AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / Standards",
+      "source_item": "STD-002",
+      "source_text": "Standard identifier format",
+      "rule_id": "STD-002",
+      "automation_status": "AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / Standards",
+      "source_item": "STD-003",
+      "source_text": "Duplicate standard references",
+      "rule_id": "STD-003",
+      "automation_status": "AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / Standards",
+      "source_item": "STD-004",
+      "source_text": "Required standard reference",
+      "rule_id": "STD-004",
+      "automation_status": "AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / Standards",
+      "source_item": "STD-005",
+      "source_text": "Unknown standard reference",
+      "rule_id": "STD-005",
+      "automation_status": "PARTIALLY_AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / BOM",
+      "source_item": "BOM-001",
+      "source_text": "BOM item number present",
+      "rule_id": "BOM-001",
+      "automation_status": "AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / BOM",
+      "source_item": "BOM-002",
+      "source_text": "BOM quantity present",
+      "rule_id": "BOM-002",
+      "automation_status": "AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / BOM",
+      "source_item": "BOM-003",
+      "source_text": "BOM part number present",
+      "rule_id": "BOM-003",
+      "automation_status": "AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / BOM",
+      "source_item": "BOM-004",
+      "source_text": "BOM description present",
+      "rule_id": "BOM-004",
+      "automation_status": "AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / BOM",
+      "source_item": "BOM-005",
+      "source_text": "BOM item sequence",
+      "rule_id": "BOM-005",
+      "automation_status": "AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / BOM",
+      "source_item": "BOM-006",
+      "source_text": "Duplicate BOM item number",
+      "rule_id": "BOM-006",
+      "automation_status": "AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / BOM",
+      "source_item": "BOM-007",
+      "source_text": "Duplicate BOM part number",
+      "rule_id": "BOM-007",
+      "automation_status": "AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / BOM",
+      "source_item": "BOM-008",
+      "source_text": "Positive BOM quantity",
+      "rule_id": "BOM-008",
+      "automation_status": "AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / BOM",
+      "source_item": "BOM-009",
+      "source_text": "BOM part number format",
+      "rule_id": "BOM-009",
+      "automation_status": "PARTIALLY_AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / BOM",
+      "source_item": "BOM-010",
+      "source_text": "BOM description length",
+      "rule_id": "BOM-010",
+      "automation_status": "PARTIALLY_AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / BOM",
+      "source_item": "BOM-011",
+      "source_text": "BOM balloon relationship",
+      "rule_id": "BOM-011",
+      "automation_status": "NOT_IMPLEMENTED"
+    },
+    {
+      "source_section": "Level-2 specification / BOM",
+      "source_item": "BOM-012",
+      "source_text": "BOM balloon quantity",
+      "rule_id": "BOM-012",
+      "automation_status": "NOT_IMPLEMENTED"
+    },
+    {
+      "source_section": "Level-2 specification / BOM",
+      "source_item": "BOM-013",
+      "source_text": "Obsolete part",
+      "rule_id": "BOM-013",
+      "automation_status": "PARTIALLY_AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / BOM",
+      "source_item": "BOM-014",
+      "source_text": "SCC symbol beside BOM item",
+      "rule_id": "BOM-014",
+      "automation_status": "NOT_IMPLEMENTED"
+    },
+    {
+      "source_section": "Level-2 specification / Part List",
+      "source_item": "PL-001",
+      "source_text": "Part-list part number present",
+      "rule_id": "PL-001",
+      "automation_status": "AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / Part List",
+      "source_item": "PL-002",
+      "source_text": "Part-list description present",
+      "rule_id": "PL-002",
+      "automation_status": "AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / Part List",
+      "source_item": "PL-003",
+      "source_text": "Duplicate part-list part number",
+      "rule_id": "PL-003",
+      "automation_status": "AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / Part List",
+      "source_item": "PL-004",
+      "source_text": "Part-list part-number format",
+      "rule_id": "PL-004",
+      "automation_status": "PARTIALLY_AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / Service Parts",
+      "source_item": "SP-001",
+      "source_text": "Service part number present",
+      "rule_id": "SP-001",
+      "automation_status": "AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / Service Parts",
+      "source_item": "SP-002",
+      "source_text": "Service part description present",
+      "rule_id": "SP-002",
+      "automation_status": "AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / Service Parts",
+      "source_item": "SP-003",
+      "source_text": "Duplicate service part number",
+      "rule_id": "SP-003",
+      "automation_status": "AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / Service Parts",
+      "source_item": "SP-004",
+      "source_text": "Service part-number format",
+      "rule_id": "SP-004",
+      "automation_status": "PARTIALLY_AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / Supplier",
+      "source_item": "SUP-001",
+      "source_text": "Supplier drawing identified",
+      "rule_id": "SUP-001",
+      "automation_status": "AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / Supplier",
+      "source_item": "SUP-002",
+      "source_text": "Supplier drawing banner",
+      "rule_id": "SUP-002",
+      "automation_status": "AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / Supplier",
+      "source_item": "SUP-003",
+      "source_text": "Supplier drawing not to scale",
+      "rule_id": "SUP-003",
+      "automation_status": "AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / Supplier",
+      "source_item": "SUP-004",
+      "source_text": "Supplier name or manufacturer",
+      "rule_id": "SUP-004",
+      "automation_status": "AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / Supplier",
+      "source_item": "SUP-005",
+      "source_text": "Supplier part number",
+      "rule_id": "SUP-005",
+      "automation_status": "AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / Supplier",
+      "source_item": "SUP-006",
+      "source_text": "Required supplier notes",
+      "rule_id": "SUP-006",
+      "automation_status": "PARTIALLY_AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / Supplier",
+      "source_item": "SUP-007",
+      "source_text": "Supplier wrapper units consistency",
+      "rule_id": "SUP-007",
+      "automation_status": "AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / Supplier",
+      "source_item": "SUP-008",
+      "source_text": "Supplier weight present",
+      "rule_id": "SUP-008",
+      "automation_status": "AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / Supplier",
+      "source_item": "SUP-009",
+      "source_text": "Supplier drawing raster region",
+      "rule_id": "SUP-009",
+      "automation_status": "AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / Supplier",
+      "source_item": "SUP-010",
+      "source_text": "Supplier internal data validation",
+      "rule_id": "SUP-010",
+      "automation_status": "NOT_IMPLEMENTED"
+    },
+    {
+      "source_section": "Level-2 specification / Cross Reference",
+      "source_item": "XREF-001",
+      "source_text": "Title revision to revision table",
+      "rule_id": "XREF-001",
+      "automation_status": "PARTIALLY_AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / Cross Reference",
+      "source_item": "XREF-002",
+      "source_text": "Sheet number to PDF page count",
+      "rule_id": "XREF-002",
+      "automation_status": "AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / Cross Reference",
+      "source_item": "XREF-003",
+      "source_text": "Supplier classification to supplier label",
+      "rule_id": "XREF-003",
+      "automation_status": "AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / Cross Reference",
+      "source_item": "XREF-004",
+      "source_text": "Standard reference to notes",
+      "rule_id": "XREF-004",
+      "automation_status": "AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / Cross Reference",
+      "source_item": "XREF-005",
+      "source_text": "Part number to part list",
+      "rule_id": "XREF-005",
+      "automation_status": "PARTIALLY_AUTOMATED"
+    },
+    {
+      "source_section": "Level-2 specification / Cross Reference",
+      "source_item": "XREF-006",
+      "source_text": "SCC title block to note or BOM",
+      "rule_id": "XREF-006",
+      "automation_status": "NOT_IMPLEMENTED"
+    },
+    {
+      "source_section": "Level-2 specification / Cross Reference",
+      "source_item": "XREF-007",
+      "source_text": "BOM to balloon",
+      "rule_id": "XREF-007",
+      "automation_status": "NOT_IMPLEMENTED"
+    },
+    {
+      "source_section": "Level-2 specification / Dimensions",
+      "source_item": "DIM-001",
+      "source_text": "Metric leading zero",
+      "rule_id": "DIM-001",
+      "automation_status": "NOT_IMPLEMENTED"
+    },
+    {
+      "source_section": "Level-2 specification / Dimensions",
+      "source_item": "DIM-002",
+      "source_text": "Metric trailing zero",
+      "rule_id": "DIM-002",
+      "automation_status": "NOT_IMPLEMENTED"
+    },
+    {
+      "source_section": "Level-2 specification / Dimensions",
+      "source_item": "DIM-003",
+      "source_text": "Decimal place limit",
+      "rule_id": "DIM-003",
+      "automation_status": "NOT_IMPLEMENTED"
+    },
+    {
+      "source_section": "Level-2 specification / Dimensions",
+      "source_item": "DIM-004",
+      "source_text": "Reference dimension parentheses",
+      "rule_id": "DIM-004",
+      "automation_status": "NOT_IMPLEMENTED"
+    },
+    {
+      "source_section": "Level-2 specification / Dimensions",
+      "source_item": "DIM-005",
+      "source_text": "Tolerance present",
+      "rule_id": "DIM-005",
+      "automation_status": "MANUAL"
+    },
+    {
+      "source_section": "Level-2 specification / Dimensions",
+      "source_item": "DIM-006",
+      "source_text": "Dimension units to title units",
+      "rule_id": "DIM-006",
+      "automation_status": "NOT_IMPLEMENTED"
+    },
+    {
+      "source_section": "Level-2 specification / Dimensions",
+      "source_item": "DIM-007",
+      "source_text": "Hidden-line dimension",
+      "rule_id": "DIM-007",
+      "automation_status": "NOT_IMPLEMENTED"
+    },
+    {
+      "source_section": "Level-2 specification / Dimensions",
+      "source_item": "DIM-008",
+      "source_text": "Redundant dimension",
+      "rule_id": "DIM-008",
+      "automation_status": "MANUAL"
+    },
+    {
+      "source_section": "Level-2 specification / Dimensions",
+      "source_item": "DIM-009",
+      "source_text": "Complete dimensioning",
+      "rule_id": "DIM-009",
+      "automation_status": "MANUAL"
+    },
+    {
+      "source_section": "Level-2 specification / Views",
+      "source_item": "VIEW-001",
+      "source_text": "View label sequence",
+      "rule_id": "VIEW-001",
+      "automation_status": "NOT_IMPLEMENTED"
+    },
+    {
+      "source_section": "Level-2 specification / Views",
+      "source_item": "VIEW-002",
+      "source_text": "Duplicate view identifier",
+      "rule_id": "VIEW-002",
+      "automation_status": "NOT_IMPLEMENTED"
+    },
+    {
+      "source_section": "Level-2 specification / Views",
+      "source_item": "VIEW-003",
+      "source_text": "Section label pair format",
+      "rule_id": "VIEW-003",
+      "automation_status": "NOT_IMPLEMENTED"
+    },
+    {
+      "source_section": "Level-2 specification / Views",
+      "source_item": "VIEW-004",
+      "source_text": "Detail label format",
+      "rule_id": "VIEW-004",
+      "automation_status": "NOT_IMPLEMENTED"
+    },
+    {
+      "source_section": "Level-2 specification / Views",
+      "source_item": "VIEW-005",
+      "source_text": "Local scale detected",
+      "rule_id": "VIEW-005",
+      "automation_status": "NOT_IMPLEMENTED"
+    },
+    {
+      "source_section": "Level-2 specification / Views",
+      "source_item": "VIEW-006",
+      "source_text": "Isometric view label",
+      "rule_id": "VIEW-006",
+      "automation_status": "NOT_IMPLEMENTED"
+    },
+    {
+      "source_section": "Level-2 specification / Views",
+      "source_item": "VIEW-007",
+      "source_text": "Required view completeness",
+      "rule_id": "VIEW-007",
+      "automation_status": "MANUAL"
+    },
+    {
+      "source_section": "Level-2 specification / Views",
+      "source_item": "VIEW-008",
+      "source_text": "Hatching",
+      "rule_id": "VIEW-008",
+      "automation_status": "NOT_IMPLEMENTED"
+    },
+    {
+      "source_section": "Level-2 specification / Views",
+      "source_item": "VIEW-009",
+      "source_text": "Arrow direction",
+      "rule_id": "VIEW-009",
+      "automation_status": "NOT_IMPLEMENTED"
+    },
+    {
+      "source_section": "Level-2 specification / GD&T",
+      "source_item": "GDT-001",
+      "source_text": "Datum identifier detected",
+      "rule_id": "GDT-001",
+      "automation_status": "NOT_IMPLEMENTED"
+    },
+    {
+      "source_section": "Level-2 specification / GD&T",
+      "source_item": "GDT-002",
+      "source_text": "Datum duplicate identifier",
+      "rule_id": "GDT-002",
+      "automation_status": "NOT_IMPLEMENTED"
+    },
+    {
+      "source_section": "Level-2 specification / GD&T",
+      "source_item": "GDT-003",
+      "source_text": "Datum sequence",
+      "rule_id": "GDT-003",
+      "automation_status": "NOT_IMPLEMENTED"
+    },
+    {
+      "source_section": "Level-2 specification / GD&T",
+      "source_item": "GDT-004",
+      "source_text": "Feature control frame token recognized",
+      "rule_id": "GDT-004",
+      "automation_status": "NOT_IMPLEMENTED"
+    },
+    {
+      "source_section": "Level-2 specification / GD&T",
+      "source_item": "GDT-005",
+      "source_text": "Position tolerance recognized",
+      "rule_id": "GDT-005",
+      "automation_status": "NOT_IMPLEMENTED"
+    },
+    {
+      "source_section": "Level-2 specification / GD&T",
+      "source_item": "GDT-006",
+      "source_text": "GD&T functional correctness",
+      "rule_id": "GDT-006",
+      "automation_status": "MANUAL"
+    },
+    {
+      "source_section": "Level-2 specification / GD&T",
+      "source_item": "GDT-007",
+      "source_text": "Datum functional correctness",
+      "rule_id": "GDT-007",
+      "automation_status": "MANUAL"
+    },
+    {
+      "source_section": "Level-2 specification / GD&T",
+      "source_item": "GDT-008",
+      "source_text": "ASME Y14.5 full compliance",
+      "rule_id": "GDT-008",
+      "automation_status": "MANUAL"
+    }
+  ]
+}

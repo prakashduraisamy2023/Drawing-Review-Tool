@@ -1,0 +1,16 @@
+{
+  "source_filename": "47789460_B_watermarked.pdf",
+  "review_scope": "High-confidence wrapper and supplier-marker checks only",
+  "expectations": [
+    {"rule_id": "TB-001", "expected_status": "PASS", "expected_actual_value": "47789460", "expected_message_class": "present", "reviewer_comment": "Wrapper drawing number is explicit."},
+    {"rule_id": "TB-003", "expected_status": "PASS", "expected_actual_value": "B", "expected_message_class": "present", "reviewer_comment": "Wrapper revision is explicit."},
+    {"rule_id": "TB-006", "expected_status": "PASS", "expected_actual_value": "MM", "expected_message_class": "present", "reviewer_comment": "Wrapper units are explicit."},
+    {"rule_id": "TB-008", "expected_status": "PASS", "expected_actual_value": "1/1", "expected_message_class": "valid", "reviewer_comment": "Sheet declaration is explicit."},
+    {"rule_id": "TB-010", "expected_status": "PASS", "expected_actual_value": "1", "expected_message_class": "count match", "reviewer_comment": "Declared total matches PDF page count."},
+    {"rule_id": "SUP-001", "expected_status": "PASS", "expected_actual_value": "SUPPLIER DRAWING", "expected_message_class": "identified", "reviewer_comment": "Explicit supplier banner is present."},
+    {"rule_id": "SUP-002", "expected_status": "PASS", "expected_actual_value": "SUPPLIER DRAWING", "expected_message_class": "banner", "reviewer_comment": "Supplier drawing wording is explicit."},
+    {"rule_id": "SUP-003", "expected_status": "PASS", "expected_actual_value": "SUPPLIER DRAWING NOT TO SCALE", "expected_message_class": "not to scale", "reviewer_comment": "Normalized exact phrase is visible."},
+    {"rule_id": "SUP-009", "expected_status": "PASS", "expected_actual_value": "1 region", "expected_message_class": "raster detected", "reviewer_comment": "Large supplier-original raster region was manually confirmed."},
+    {"rule_id": "STD-002", "expected_status": "WARNING", "expected_actual_value": "CAL 117", "expected_message_class": "unknown syntax", "reviewer_comment": "CAL 117 is explicit but outside the configured syntax families; warning is syntax-only."}
+  ]
+}

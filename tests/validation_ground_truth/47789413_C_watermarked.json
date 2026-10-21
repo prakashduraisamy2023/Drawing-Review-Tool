@@ -1,0 +1,14 @@
+{
+  "source_filename": "47789413_C_watermarked.pdf",
+  "review_scope": "High-confidence title-block and document-structure checks only",
+  "expectations": [
+    {"rule_id": "TB-001", "expected_status": "PASS", "expected_actual_value": "47789413", "expected_message_class": "present", "reviewer_comment": "Drawing number is explicit in the wrapper title block."},
+    {"rule_id": "TB-002", "expected_status": "PASS", "expected_actual_value": "same on five sheets", "expected_message_class": "consistent", "reviewer_comment": "All five title blocks show the same drawing number."},
+    {"rule_id": "TB-003", "expected_status": "PASS", "expected_actual_value": "C", "expected_message_class": "present", "reviewer_comment": "Revision is explicit."},
+    {"rule_id": "TB-004", "expected_status": "PASS", "expected_actual_value": "same on five sheets", "expected_message_class": "consistent", "reviewer_comment": "All five title blocks show revision C."},
+    {"rule_id": "TB-006", "expected_status": "PASS", "expected_actual_value": "INCHES", "expected_message_class": "present", "reviewer_comment": "Units are explicit."},
+    {"rule_id": "TB-008", "expected_status": "PASS", "expected_actual_value": "1/5 through 5/5", "expected_message_class": "valid", "reviewer_comment": "Sheet declarations are explicit."},
+    {"rule_id": "TB-009", "expected_status": "PASS", "expected_actual_value": "1,2,3,4,5", "expected_message_class": "sequence", "reviewer_comment": "Sheet sequence was manually inspected."},
+    {"rule_id": "TB-010", "expected_status": "PASS", "expected_actual_value": "5", "expected_message_class": "count match", "reviewer_comment": "Declared total matches PDF page count."}
+  ]
+}

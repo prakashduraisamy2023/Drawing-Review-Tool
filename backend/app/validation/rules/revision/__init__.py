@@ -1,0 +1,1 @@
+"""Revision rule category marker."""

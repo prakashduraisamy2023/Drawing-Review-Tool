@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Reviewed Level 4 relationship expectations",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["source_filename", "review_status", "expectations"],
+  "properties": {
+    "source_filename": {"type": "string", "minLength": 1},
+    "review_status": {"const": "MANUALLY_REVIEWED"},
+    "reviewer": {"type": "string"},
+    "reviewed_at": {"type": "string", "format": "date-time"},
+    "expectations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["relationship_rule_id", "expected_status"],
+        "properties": {
+          "relationship_rule_id": {"type": "string", "pattern": "^REL-"},
+          "finding_id": {"type": "string"},
+          "expected_status": {
+            "enum": ["PASS", "FAIL", "WARNING", "MANUAL_REVIEW", "NOT_APPLICABLE", "NOT_EVALUATED"]
+          },
+          "reviewer_comment": {"type": "string"}
+        }
+      }
+    }
+  }
+}

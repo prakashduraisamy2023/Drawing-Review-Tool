@@ -1,0 +1,16 @@
+{
+  "source_filename": "47789660_A_watermarked.pdf",
+  "review_scope": "High-confidence wrapper and supplier-marker checks only",
+  "expectations": [
+    {"rule_id": "TB-001", "expected_status": "PASS", "expected_actual_value": "47789660", "expected_message_class": "present", "reviewer_comment": "Wrapper drawing number is explicit."},
+    {"rule_id": "TB-003", "expected_status": "PASS", "expected_actual_value": "A", "expected_message_class": "present", "reviewer_comment": "Wrapper revision is explicit."},
+    {"rule_id": "TB-006", "expected_status": "PASS", "expected_actual_value": "MM", "expected_message_class": "present", "reviewer_comment": "Wrapper units are explicit."},
+    {"rule_id": "TB-008", "expected_status": "PASS", "expected_actual_value": "1/1", "expected_message_class": "valid", "reviewer_comment": "Sheet declaration is explicit."},
+    {"rule_id": "TB-010", "expected_status": "PASS", "expected_actual_value": "1", "expected_message_class": "count match", "reviewer_comment": "Declared total matches PDF page count."},
+    {"rule_id": "SUP-001", "expected_status": "PASS", "expected_actual_value": "SUPPLIER DRAWING", "expected_message_class": "identified", "reviewer_comment": "Explicit supplier marker is present."},
+    {"rule_id": "SUP-002", "expected_status": "PASS", "expected_actual_value": "SUPPLIER DRAWING", "expected_message_class": "banner", "reviewer_comment": "Supplier drawing wording is explicit."},
+    {"rule_id": "SUP-003", "expected_status": "PASS", "expected_actual_value": "SUPPLIER DRAWING NOT TO SCALE", "expected_message_class": "not to scale", "reviewer_comment": "Normalized exact phrase is visible."},
+    {"rule_id": "SUP-004", "expected_status": "PASS", "expected_actual_value": "SUPREME", "expected_message_class": "identity", "reviewer_comment": "Supplier name is explicit in wrapper notes."},
+    {"rule_id": "SUP-009", "expected_status": "PASS", "expected_actual_value": "1 region", "expected_message_class": "raster detected", "reviewer_comment": "Supplier-original raster region was manually confirmed."}
+  ]
+}

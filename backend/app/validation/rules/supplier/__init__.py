@@ -1,0 +1,1 @@
+"""Supplier rule category marker."""

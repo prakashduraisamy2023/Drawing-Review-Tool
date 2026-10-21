@@ -1,0 +1,21 @@
+{
+  "rule_set_version": "1.0.0",
+  "minimum_confidence": 0.75,
+  "overall_status": {
+    "critical_failure": "FAIL",
+    "high_failure": "REVIEW_REQUIRED",
+    "manual_review": "REVIEW_REQUIRED",
+    "warning": "PASS_WITH_WARNINGS"
+  },
+  "rules": {
+    "TB-004": {"enabled": true, "severity": "HIGH", "description": "Revision shall be consistent across drawing sheets"},
+    "TB-014": {"enabled": true, "pattern": null},
+    "NOTE-002": {"enabled": true, "allowed_missing": []},
+    "NOTE-006": {"enabled": true, "required_text": []},
+    "BOM-009": {"enabled": true, "pattern": null},
+    "BOM-010": {"enabled": true, "maximum": 0},
+    "PL-004": {"enabled": true, "pattern": null},
+    "SP-004": {"enabled": true, "pattern": null},
+    "SUP-006": {"enabled": true, "required_text": []}
+  }
+}
