@@ -71,6 +71,24 @@ Health is available at `http://127.0.0.1:8000/health`; OpenAPI documentation is 
 
 For a client demonstration after installation, run `start_demo.bat`. It builds the UI if needed, starts one local server for the API and production frontend, waits for health, and opens the browser at `http://127.0.0.1:8000`.
 
+## Streamlit multi-device application
+
+For a browser-accessible interface on phones, tablets, and other computers, run:
+
+```powershell
+.\start_streamlit.bat
+```
+
+The host computer opens `http://127.0.0.1:8501`. Devices on the same trusted local
+network can use the Network URL printed in the launcher terminal. The Streamlit UI
+reuses the Level 1–4 Python engines and provides PDF page preview, complete analysis,
+review tables, provenance, and JSON/CSV downloads.
+
+For internet access, deploy `streamlit_app.py` from the GitHub repository using
+Streamlit Community Cloud. See
+[docs/STREAMLIT_DEPLOYMENT.md](docs/STREAMLIT_DEPLOYMENT.md) for the complete local
+and cloud procedure and confidentiality guidance.
+
 ## Start the frontend
 
 In another terminal:
