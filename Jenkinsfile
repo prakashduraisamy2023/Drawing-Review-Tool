@@ -102,4 +102,19 @@ stage('Prepare Test Drawings') {
             echo 'Drawing Review CI: FAILURE - Check console output.'
         }
     }
+    stage('React Frontend Build') {
+    steps {
+        bat '''
+            cd frontend
+            call pnpm install --frozen-lockfile
+            if errorlevel 1 exit /b 1
+
+            call pnpm run lint
+            if errorlevel 1 exit /b 1
+
+            call pnpm run build
+            if errorlevel 1 exit /b 1
+        '''
+    }
+}
 }
