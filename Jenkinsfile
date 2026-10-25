@@ -2,9 +2,11 @@
 pipeline {
     agent any
 
-    environment {
-        PYTHON_EXE = 'C:/Program Files/Python311/python.exe'
-    }
+    
+environment {
+    PYTHON_EXE = 'C:/Program Files/Python311/python.exe'
+    PNPM_EXE = 'C:\\Users\\91979\\AppData\\Roaming\\npm\\pnpm.cmd'
+}
 
     options {
         timestamps()
@@ -101,48 +103,49 @@ pipeline {
             }
         }
 
-        stage('Verify Frontend Tools') {
-            steps {
-                bat '''
-                    @echo off
+     
+stage('Verify Frontend Tools') {
+    steps {
+        bat '''
+            @echo off
 
-                    node --version
-                    if errorlevel 1 (
-                        echo ERROR: Node.js is not available to Jenkins.
-                        exit /b 1
-                    )
+            node --version
+            if errorlevel 1 exit /b 1
 
-                    call pnpm --version
-                    if errorlevel 1 (
-                        echo ERROR: pnpm is not available to Jenkins.
-                        exit /b 1
-                    )
+            if not exist "%PNPM_EXE%" (
+                echo ERROR: pnpm.cmd not found.
+                exit /b 1
+            )
 
-                    echo Node.js and pnpm are available.
-                '''
-            }
+            call "%PNPM_EXE%" --version
+            if errorlevel 1 exit /b 1
+
+            echo Frontend tools verified.
+        '''
+    }
+}
+
+stage('React Frontend Build') {
+    steps {
+        dir('frontend') {
+            bat '''
+                @echo off
+
+                call "%PNPM_EXE%" install --frozen-lockfile
+                if errorlevel 1 exit /b 1
+
+                call "%PNPM_EXE%" run lint
+                if errorlevel 1 exit /b 1
+
+                call "%PNPM_EXE%" run build
+                if errorlevel 1 exit /b 1
+
+                echo React frontend build completed successfully.
+            '''
         }
+    }
+}
 
-        stage('React Frontend Build') {
-            steps {
-                dir('frontend') {
-                    bat '''
-                        @echo off
-
-                        call pnpm install --frozen-lockfile
-                        if errorlevel 1 exit /b 1
-
-                        call pnpm run lint
-                        if errorlevel 1 exit /b 1
-
-                        call pnpm run build
-                        if errorlevel 1 exit /b 1
-
-                        echo React frontend build completed.
-                    '''
-                }
-            }
-        }
     }
 
     post {
