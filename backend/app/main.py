@@ -4,6 +4,7 @@ import csv
 import io
 import json
 import logging
+from collections.abc import Iterator
 from contextlib import asynccontextmanager
 from functools import partial
 from pathlib import Path
@@ -11,14 +12,15 @@ from tempfile import TemporaryDirectory
 from typing import Annotated
 
 import pymupdf
-from fastapi import Depends, FastAPI, HTTPException, Response, UploadFile, status
+from fastapi import Depends, FastAPI, HTTPException, Request, Response, UploadFile, status
 from fastapi.concurrency import run_in_threadpool
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
 from backend.app.api_models import DrawingUploadResponse
 from backend.app.config import Settings, get_settings
-from backend.app.drawing_store import DrawingNotFoundError, DrawingStore
+from backend.app.drawing_store import DrawingNotFoundError, DrawingStorageError, DrawingStore
 from backend.app.extraction import DrawingExtractionPipeline, DrawingParser
 from backend.app.extraction.document import ocr_available
 from backend.app.models.drawing import (
@@ -64,8 +66,18 @@ def get_api_settings() -> Settings:
 SettingsDependency = Annotated[Settings, Depends(get_api_settings)]
 
 
-def get_drawing_store(current_settings: SettingsDependency) -> DrawingStore:
-    return DrawingStore(current_settings.storage_dir)
+def get_drawing_store(current_settings: SettingsDependency) -> Iterator[DrawingStore]:
+    if current_settings.storage_backend == "local":
+        yield DrawingStore(current_settings.storage_dir)
+    else:
+        from backend.app.gcs_drawing_store import GCSDrawingStore
+
+        with TemporaryDirectory(prefix="drawing-processing-") as directory:
+            store = GCSDrawingStore(current_settings.gcs_bucket, directory)
+            try:
+                yield store
+            finally:
+                store.close()
 
 
 def get_drawing_parser() -> DrawingParser:
@@ -98,6 +110,19 @@ app.add_middleware(
     allow_methods=["GET", "POST"],
     allow_headers=["*"],
 )
+
+
+@app.exception_handler(DrawingStorageError)
+async def drawing_storage_error(_: Request, exc: DrawingStorageError) -> JSONResponse:
+    logger.error("Drawing storage operation failed", exc_info=exc)
+    return JSONResponse(status_code=503, content={"detail": "Drawing storage is unavailable."})
+
+
+def _discard_failed_upload(store: DrawingStore, drawing_id: str) -> None:
+    try:
+        store.discard(drawing_id)
+    except DrawingStorageError:
+        logger.exception("Unable to remove failed drawing %s", drawing_id)
 
 
 @app.get("/health")
@@ -211,9 +236,10 @@ async def _save_drawing_upload(
                     detail="The uploaded file does not have a valid PDF signature.",
                 )
         await run_in_threadpool(_validate_pdf, partial_path)
-        return drawing_id, store.finalize_source(drawing_id), filename
+        source = await run_in_threadpool(store.finalize_source, drawing_id)
+        return drawing_id, source, filename
     except Exception:
-        store.discard(drawing_id)
+        await run_in_threadpool(_discard_failed_upload, store, drawing_id)
         raise
     finally:
         await upload.close()
@@ -278,8 +304,11 @@ async def upload_drawing(
     try:
         drawing = await run_in_threadpool(partial(parser.parse, source, source_filename=filename))
         await run_in_threadpool(store.save_result, drawing_id, drawing)
+    except DrawingStorageError:
+        await run_in_threadpool(_discard_failed_upload, store, drawing_id)
+        raise
     except Exception as exc:
-        store.discard(drawing_id)
+        await run_in_threadpool(_discard_failed_upload, store, drawing_id)
         logger.exception("Drawing processing failed for %s", drawing_id)
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
@@ -291,6 +320,38 @@ async def upload_drawing(
 @app.get("/api/drawings/{drawing_id}", response_model=DrawingDocument)
 def get_drawing(drawing_id: str, store: StoreDependency) -> DrawingDocument:
     return _stored_document(drawing_id, store)
+
+
+@app.get("/api/drawings/{drawing_id}/source")
+def get_drawing_source(drawing_id: str, store: StoreDependency) -> FileResponse:
+    _stored_document(drawing_id, store)
+    try:
+        source = store.source_path(drawing_id)
+    except DrawingNotFoundError as exc:
+        raise HTTPException(status_code=404, detail="Drawing source PDF was not found.") from exc
+    return FileResponse(
+        source,
+        media_type="application/pdf",
+        filename=f"drawing-{drawing_id}.pdf",
+        headers={"Cache-Control": "private, no-store"},
+    )
+
+
+@app.get("/api/drawings/{drawing_id}/vision/evidence/{filename}")
+def get_drawing_visual_evidence(
+    drawing_id: str, filename: str, store: StoreDependency
+) -> FileResponse:
+    _stored_document(drawing_id, store)
+    try:
+        evidence = store.evidence_path(drawing_id, filename)
+    except DrawingNotFoundError as exc:
+        raise HTTPException(status_code=404, detail="Visual evidence was not found.") from exc
+    return FileResponse(
+        evidence,
+        media_type="image/png",
+        filename=filename,
+        headers={"Cache-Control": "private, no-store"},
+    )
 
 
 @app.get("/api/drawings/{drawing_id}/pages", response_model=list[DrawingPage])
@@ -405,9 +466,9 @@ def export_drawing_csv(drawing_id: str, store: StoreDependency) -> Response:
 
 @app.post("/api/drawings/{drawing_id}/validate", response_model=ValidationReport)
 async def validate_drawing(drawing_id: str, store: StoreDependency) -> ValidationReport:
-    drawing = _stored_document(drawing_id, store)
+    drawing = await run_in_threadpool(_stored_document, drawing_id, store)
     try:
-        vision = store.load_vision(drawing_id)
+        vision = await run_in_threadpool(store.load_vision, drawing_id)
     except DrawingNotFoundError:
         vision = None
     engine = ValidationEngine()
@@ -424,9 +485,9 @@ async def analyze_drawing_vision(
     store: StoreDependency,
     current_settings: SettingsDependency,
 ) -> VisionReport:
-    drawing = _stored_document(drawing_id, store)
+    drawing = await run_in_threadpool(_stored_document, drawing_id, store)
     try:
-        source = store.source_path(drawing_id)
+        source = await run_in_threadpool(store.source_path, drawing_id)
     except DrawingNotFoundError as exc:
         raise HTTPException(status_code=404, detail="Drawing source PDF was not found.") from exc
     engine = VisionEngine(settings=current_settings)
@@ -526,13 +587,13 @@ async def analyze_drawing_relationships(
 ) -> RelationshipReport:
     if not current_settings.level4_enabled:
         raise HTTPException(status_code=503, detail="Level 4 is disabled by configuration.")
-    drawing = _stored_document(drawing_id, store)
+    drawing = await run_in_threadpool(_stored_document, drawing_id, store)
     try:
-        validation = store.load_validation(drawing_id)
+        validation = await run_in_threadpool(store.load_validation, drawing_id)
     except DrawingNotFoundError:
         validation = None
     try:
-        vision = store.load_vision(drawing_id)
+        vision = await run_in_threadpool(store.load_vision, drawing_id)
     except DrawingNotFoundError:
         vision = None
     report = await run_in_threadpool(
@@ -659,15 +720,26 @@ async def run_complete_analysis(
             status_code=503,
             detail="Complete analysis requires Level 3 and Level 4 to be enabled.",
         )
-    drawing = _stored_document(drawing_id, store)
-    source = store.source_path(drawing_id)
+    drawing = await run_in_threadpool(_stored_document, drawing_id, store)
+    try:
+        source = await run_in_threadpool(store.source_path, drawing_id)
+    except DrawingNotFoundError as exc:
+        raise HTTPException(status_code=404, detail="Drawing source PDF was not found.") from exc
+
+    debug_directory = (
+        store.debug_directory(drawing_id) if current_settings.vision_debug_overlays else None
+    )
 
     base_validation = await run_in_threadpool(
         partial(ValidationEngine().validate, drawing, drawing_id=drawing_id)
     )
     vision = await run_in_threadpool(
         partial(
-            VisionEngine(settings=current_settings).analyze, source, drawing, drawing_id=drawing_id
+            VisionEngine(settings=current_settings).analyze,
+            source,
+            drawing,
+            drawing_id=drawing_id,
+            debug_directory=debug_directory,
         )
     )
     validation = await run_in_threadpool(

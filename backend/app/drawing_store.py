@@ -1,8 +1,9 @@
-"""Filesystem persistence for uploaded drawings and extraction JSON."""
+"""Local persistence and the shared artifact contract for drawing storage."""
 
 from __future__ import annotations
 
 import json
+import re
 import shutil
 from pathlib import Path
 from uuid import UUID, uuid4
@@ -11,6 +12,13 @@ from backend.app.models.drawing import DrawingDocument
 from backend.app.relationships.models import RelationshipReport
 from backend.app.validation.models import ValidationReport
 from backend.app.vision.models import VisionReport, VisualReview
+
+# Object names are application-controlled, never derived from uploaded filenames.
+JSON_ARTIFACTS = frozenset({"result.json", "validation.json", "vision.json", "relationships.json"})
+
+
+class DrawingStorageError(RuntimeError):
+    """Persistent storage is unavailable; this is not a missing drawing."""
 
 
 class DrawingNotFoundError(LookupError):
@@ -42,56 +50,47 @@ class DrawingStore:
         return source
 
     def save_result(self, drawing_id: str, document: DrawingDocument) -> None:
-        directory = self._record_directory(drawing_id)
-        target = directory / "result.json"
-        temporary = directory / "result.json.part"
-        temporary.write_text(document.model_dump_json(indent=2), encoding="utf-8")
-        temporary.replace(target)
+        self._write_json(drawing_id, "result.json", document.model_dump_json(indent=2))
 
     def load_result(self, drawing_id: str) -> DrawingDocument:
-        target = self._record_directory(drawing_id) / "result.json"
-        if not target.is_file():
-            raise DrawingNotFoundError(drawing_id)
-        return DrawingDocument.model_validate_json(target.read_text(encoding="utf-8"))
+        return DrawingDocument.model_validate_json(self._read_json(drawing_id, "result.json"))
 
     def save_validation(self, drawing_id: str, report: ValidationReport) -> None:
-        directory = self._record_directory(drawing_id)
-        target = directory / "validation.json"
-        temporary = directory / "validation.json.part"
-        temporary.write_text(report.model_dump_json(indent=2), encoding="utf-8")
-        temporary.replace(target)
+        self._write_json(drawing_id, "validation.json", report.model_dump_json(indent=2))
 
     def load_validation(self, drawing_id: str) -> ValidationReport:
-        target = self._record_directory(drawing_id) / "validation.json"
-        if not target.is_file():
-            raise DrawingNotFoundError(drawing_id)
-        return ValidationReport.model_validate_json(target.read_text(encoding="utf-8"))
+        return ValidationReport.model_validate_json(self._read_json(drawing_id, "validation.json"))
 
     def save_vision(self, drawing_id: str, report: VisionReport) -> None:
-        directory = self._record_directory(drawing_id)
-        target = directory / "vision.json"
-        temporary = directory / "vision.json.part"
-        temporary.write_text(report.model_dump_json(indent=2), encoding="utf-8")
-        temporary.replace(target)
+        self._write_json(drawing_id, "vision.json", report.model_dump_json(indent=2))
 
     def load_vision(self, drawing_id: str) -> VisionReport:
-        target = self._record_directory(drawing_id) / "vision.json"
-        if not target.is_file():
-            raise DrawingNotFoundError(drawing_id)
-        return VisionReport.model_validate_json(target.read_text(encoding="utf-8"))
+        return VisionReport.model_validate_json(self._read_json(drawing_id, "vision.json"))
 
     def save_relationships(self, drawing_id: str, report: RelationshipReport) -> None:
-        directory = self._record_directory(drawing_id)
-        target = directory / "relationships.json"
-        temporary = directory / "relationships.json.part"
-        temporary.write_text(report.model_dump_json(indent=2), encoding="utf-8")
-        temporary.replace(target)
+        self._write_json(drawing_id, "relationships.json", report.model_dump_json(indent=2))
 
     def load_relationships(self, drawing_id: str) -> RelationshipReport:
-        target = self._record_directory(drawing_id) / "relationships.json"
+        return RelationshipReport.model_validate_json(
+            self._read_json(drawing_id, "relationships.json")
+        )
+
+    def _write_json(self, drawing_id: str, name: str, content: str) -> None:
+        if name not in JSON_ARTIFACTS:
+            raise ValueError("Unsupported drawing artifact")
+        directory = self._record_directory(drawing_id)
+        target = directory / name
+        temporary = directory / f"{name}.part"
+        temporary.write_text(content, encoding="utf-8")
+        temporary.replace(target)
+
+    def _read_json(self, drawing_id: str, name: str) -> str:
+        if name not in JSON_ARTIFACTS:
+            raise ValueError("Unsupported drawing artifact")
+        target = self._record_directory(drawing_id) / name
         if not target.is_file():
             raise DrawingNotFoundError(drawing_id)
-        return RelationshipReport.model_validate_json(target.read_text(encoding="utf-8"))
+        return target.read_text(encoding="utf-8")
 
     def source_path(self, drawing_id: str) -> Path:
         source = self._record_directory(drawing_id) / "source.pdf"
@@ -103,6 +102,14 @@ class DrawingStore:
         directory = self._record_directory(drawing_id) / "vision_debug"
         directory.mkdir(parents=True, exist_ok=True)
         return directory
+
+    def evidence_path(self, drawing_id: str, filename: str) -> Path:
+        if not re.fullmatch(r"page_[1-9][0-9]*_level3_overlay\.png", filename):
+            raise DrawingNotFoundError(drawing_id)
+        target = self._record_directory(drawing_id) / "vision_debug" / filename
+        if not target.is_file():
+            raise DrawingNotFoundError(drawing_id)
+        return target
 
     def append_visual_review(self, drawing_id: str, review: VisualReview) -> list[VisualReview]:
         directory = self._record_directory(drawing_id)

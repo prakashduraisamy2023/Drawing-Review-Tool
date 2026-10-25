@@ -1,7 +1,8 @@
 from functools import lru_cache
 from pathlib import Path
+from typing import Literal
 
-from pydantic import AliasChoices, Field
+from pydantic import AliasChoices, Field, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -10,6 +11,8 @@ class Settings(BaseSettings):
     api_prefix: str = "/api/v1"
     max_upload_bytes: int = Field(default=50 * 1024 * 1024, ge=1)
     storage_dir: Path = Path("data/output/drawings")
+    storage_backend: Literal["local", "gcs"] = "local"
+    gcs_bucket: str | None = None
     ocr_enabled: bool = Field(
         default=False,
         validation_alias=AliasChoices("OCR_ENABLED", "DRAWING_OCR_ENABLED"),
@@ -41,6 +44,20 @@ class Settings(BaseSettings):
         extra="ignore",
         populate_by_name=True,
     )
+
+    @model_validator(mode="after")
+    def validate_storage(self) -> "Settings":
+        if self.storage_backend == "gcs":
+            if not self.gcs_bucket or not self.gcs_bucket.strip():
+                raise ValueError("DRAWING_GCS_BUCKET is required when DRAWING_STORAGE_BACKEND=gcs")
+            # Accept a bucket name, never a URL or an object prefix.
+            if self.gcs_bucket != self.gcs_bucket.strip() or any(
+                character in self.gcs_bucket for character in "/\\:"
+            ):
+                raise ValueError(
+                    "DRAWING_GCS_BUCKET must be a bucket name without a path or scheme"
+                )
+        return self
 
 
 @lru_cache
