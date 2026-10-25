@@ -148,6 +148,24 @@ stage('React Frontend Build') {
 
     }
 
+stage('Docker Image Build') {
+    steps {
+        bat '''
+            @echo off
+
+            docker --context desktop-linux info --format "{{.ServerVersion}}"
+            if errorlevel 1 exit /b 1
+
+            docker --context desktop-linux build ^
+              -t drawing-review-tool:ci-%BUILD_NUMBER% ^
+              .
+            if errorlevel 1 exit /b 1
+
+            echo Docker image built successfully.
+        '''
+    }
+}
+
     post {
         always {
             junit(
