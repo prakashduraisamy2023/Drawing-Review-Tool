@@ -102,6 +102,7 @@ stage('Prepare Test Drawings') {
             echo 'Drawing Review CI: FAILURE - Check console output.'
         }
     }
+}
     stage('React Frontend Build') {
     steps {
         bat '''
@@ -117,4 +118,4 @@ stage('Prepare Test Drawings') {
         '''
     }
 }
-}
+
