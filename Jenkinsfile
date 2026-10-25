@@ -145,9 +145,6 @@ stage('React Frontend Build') {
         }
     }
 }
-
-    }
-
 stage('Docker Image Build') {
     steps {
         bat '''
@@ -165,6 +162,47 @@ stage('Docker Image Build') {
         '''
     }
 }
+    
+stage('Docker Smoke Test') {
+    steps {
+        bat '''
+            @echo off
+
+            docker --context desktop-linux run -d ^
+              --name drawing-review-ci-%BUILD_NUMBER% ^
+              -p 127.0.0.1:18081:8080 ^
+              drawing-review-tool:ci-%BUILD_NUMBER%
+            if errorlevel 1 exit /b 1
+        '''
+
+        powershell '''
+            $url = "http://127.0.0.1:18081/health"
+            $healthy = $false
+
+            for ($i = 0; $i -lt 30; $i++) {
+                try {
+                    $response = Invoke-WebRequest -Uri $url -UseBasicParsing -TimeoutSec 3
+                    if ($response.StatusCode -eq 200) {
+                        Write-Host "Container health check PASSED"
+                        $healthy = $true
+                        break
+                    }
+                }
+                catch {
+                    Start-Sleep -Seconds 2
+                }
+            }
+
+            if (-not $healthy) {
+                throw "Container health check FAILED"
+            }
+        '''
+    }
+}
+    }
+
+
+
 
     post {
         always {
@@ -178,6 +216,17 @@ stage('Docker Image Build') {
                 allowEmptyArchive: true,
                 fingerprint: true
             )
+        
+script {
+    bat(
+        script: '''
+            @echo off
+            docker --context desktop-linux rm -f drawing-review-ci-%BUILD_NUMBER% 2>nul
+            exit /b 0
+        ''',
+        returnStatus: true
+    )
+}
         }
 
         success {
