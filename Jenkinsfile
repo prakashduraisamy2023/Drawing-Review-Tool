@@ -45,7 +45,7 @@ stage('Prepare Test Drawings') {
     steps {
         bat '''
             @echo off
-            set "SOURCE=E:\\AI-Workspace\\jenkins-test-data\\Drawing-Review"
+            set "SOURCE= E:\\AI-Workspace\\projects\\Engineering-Drawing-PoC\\jenkins-test-data"
             set "DEST=data\\input"
 
             if not exist "%SOURCE%\\" (
