@@ -12,8 +12,10 @@
   already built single-server package
 - Optional local Tesseract installation when raster supplier OCR is enabled
 
-No cloud account, external AI API, database, or internet connection is required at
-runtime. Drawings and outputs remain on the workstation.
+With the default local storage backend, no cloud account, external AI API,
+database, or internet connection is required at runtime. Drawings and outputs
+remain on the workstation. Cloud Run deployments can use a private GCS bucket
+for durable storage; see [persistent storage](PERSISTENT_STORAGE.md).
 
 ## Network and ports
 
@@ -33,12 +35,15 @@ those are production deployment concerns outside this PoC.
 
 Inputs are read from uploads. Persistent records are written under
 `data/output/drawings` by default. This location needs write permission and should
-be included in the client’s backup/retention policy.
+be included in the client’s backup/retention policy. For GCS storage, the bucket
+holds persistent records and the container filesystem is used only for temporary
+processing. Cloud Run's instance filesystem must not be used for durable local storage.
 
 ## Configuration
 
 Environment variables include `DRAWING_MAX_UPLOAD_BYTES`,
-`DRAWING_STORAGE_DIR`, `DRAWING_LEVEL3_ENABLED`, `DRAWING_LEVEL4_ENABLED`,
+`DRAWING_STORAGE_BACKEND` (default `local`), `DRAWING_GCS_BUCKET` (required for `gcs`),
+`DRAWING_STORAGE_DIR` (local only), `DRAWING_LEVEL3_ENABLED`, `DRAWING_LEVEL4_ENABLED`,
 `DRAWING_OCR_ENABLED`, `DRAWING_OCR_PROVIDER`, and `DRAWING_DEMO_MODE`.
 Controlled validation, visual, and relationship policies reside under `config/`.
 Changes to supplier mappings or SCC semantics require engineering governance and
